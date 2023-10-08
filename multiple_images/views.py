@@ -1,13 +1,13 @@
 from rest_framework import generics, permissions
 from rest_framework import response, status
 
-from django.http import HttpRequest
 from django.core.files.storage import FileSystemStorage
+from django.http import HttpRequest
 
-from . import serializers, models
+from . import serializers, models, mixins
 
 
-class MultipleImages(generics.CreateAPIView):
+class CreateImage(generics.CreateAPIView):
     
     permission_classes = (permissions.AllowAny, )
     serializer_class = serializers.CreateMultipleImages
@@ -25,7 +25,7 @@ class MultipleImages(generics.CreateAPIView):
         
         return response.Response({
             "status": 1
-            , "Data": serializer.data}
+            , "data": serializer.data}
             , status=status.HTTP_201_CREATED
             , headers=self.get_success_headers(serializer.data))
 
@@ -53,7 +53,7 @@ class MultipleImages(generics.CreateAPIView):
         return image_name
 
 
-class ListAllDetails(generics.ListAPIView):
+class ListImages(generics.ListAPIView):
     queryset = models.MultipleImage.objects
     serializer_class = serializers.GetImages
     permission_classes = ()
@@ -64,4 +64,16 @@ class ListAllDetails(generics.ListAPIView):
         
         return response.Response({
             "data": serializer.data,
-        }, status=status.HTTP_200_OK) 
+        }, status=status.HTTP_200_OK)
+
+
+class SpecificImage(generics.RetrieveDestroyAPIView, mixins.DeleteFilesMixin):
+    queryset = models.MultipleImage.objects
+    serializer_class = serializers.GetImages
+    permission_classes = ()
+    
+    def get_object(self):
+        obj = super().get_object()
+        if self.request.method != "GET":
+            self.delete_files(obj)
+        return obj

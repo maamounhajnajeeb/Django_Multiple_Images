@@ -7,6 +7,7 @@ app_name = "multiple_images"
 
 
 urlpatterns = [
-    path("images/", views.MultipleImages.as_view(), name="list_add_image"),
-    path("images/list/", views.ListAllDetails.as_view(), name="list_add_image"),
+    path("create_image/", views.CreateImage.as_view(), name="add_image"),
+    path("images/", views.ListImages.as_view(), name="list_images"),
+    path("images/<int:pk>/", views.SpecificImage.as_view(), name="specific_image"),
 ]
