@@ -10,7 +10,7 @@ class DeleteFilesMixin:
         fs = FileSystemStorage()
         images_names = ""
         
-        uploaded_images = self.uploaded_images(self.request)
+        uploaded_images = self.uploaded_images()
         for image_obj in uploaded_images:
             files_names = self.get_files_names(fs)
             unique_name = self.check_redundent(image_obj.name, files_names)

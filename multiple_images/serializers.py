@@ -3,7 +3,7 @@ from rest_framework import serializers
 from . import models
 
 class CreateMultipleImages(serializers.ModelSerializer):
-
+    
     class Meta:
         model = models.MultipleImage
         fields = "__all__"
